@@ -1,4 +1,5 @@
 """
+Dynamical model for drug delivery across the blood brain barrier, with ultrasound induced permeabilization.
 """
 
 import numpy as np
@@ -53,30 +54,35 @@ def simulate_model(init, params, time_end):
 
     return sol
 
-kcl = 0.0001 # Rate of elimination (1/min)
-kmetp = 0 # Rate of metabolism
-kfcsf = 0.002 # Rate across the BBB (plasma to CSF)
-krcsf = 0.0002 # Rate across the BBB (CSF to plasma)
-kmetcsf = 0.03 # Rate of metabolism in CSF (1/min)
-kfsn = 0.1 # Rate of transfer from CSF to substantia nigra
-krsn = 0.05 # Rate of transfer from substantia nigra to CSF
 
-Cp0 = 100 # Initial concentration in plasma ug/mL
-Ccsf0 = 0.0 # Initial concentration in CSF
-Csn0 = 0.0 # Initial concentration in substantia nigra
+# Example usage:
 
-sol = simulate_model([Cp0, Ccsf0, Csn0], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=10)
+# kcl = 0.0001 # Rate of elimination (1/min)
+# kmetp = 0 # Rate of metabolism
+# kfcsf = 0.002 # Rate across the BBB (plasma to CSF)
+# krcsf = 0.0002 # Rate across the BBB (CSF to plasma)
+# kmetcsf = 0.03 # Rate of metabolism in CSF (1/min)
+# kfsn = 0.1 # Rate of transfer from CSF to substantia nigra
+# krsn = 0.05 # Rate of transfer from substantia nigra to CSF
 
-plt.plot(sol.t, sol.y[0], label='Cp (Plasma)')
-plt.plot(sol.t, sol.y[1], label='Ccsf (CSF)')
-plt.plot(sol.t, sol.y[2], label='Csn (Substantia Nigra)')
-plt.xlabel('Time (min)')
-plt.ylabel('Concentration (ug/L)')
-plt.legend()
-plt.show()
+# Cp0 = 100 # Initial concentration in plasma ug/mL
+# Ccsf0 = 0.0 # Initial concentration in CSF
+# Csn0 = 0.0 # Initial concentration in substantia nigra
+
+# sol = simulate_model([Cp0, Ccsf0, Csn0], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=500)
+
+# plt.plot(sol.t, sol.y[0], label='Cp (Plasma)')
+# plt.plot(sol.t, sol.y[1], label='Ccsf (CSF)')
+# plt.plot(sol.t, sol.y[2], label='Csn (Substantia Nigra)')
+# plt.xlabel('Time (min)')
+# plt.ylabel('Concentration (ug/L)')
+# plt.legend()
+# plt.show()
+
+
+# Variable FUS durations
 
 # stim_times = [0.00001, 0.01, 0.05, 0.1, 0.5, 1, 5]
-
 # for i, stim_time_i in enumerate(stim_times):
 #     # Stim time
 #     stim_time = stim_time_i
@@ -143,7 +149,8 @@ plt.show()
 # plt.show()
 
 
-# # Parameter definitions (rate constants)
+# Multi-step FUS stimulation
+
 # kcl = 0.0001 # Rate of elimination (1/min)
 # kmetp = 0 # Rate of metabolism
 # kfcsf = 0.002 # Rate across the BBB (plasma to CSF)
@@ -231,70 +238,140 @@ plt.show()
 # plt.show()
 
 
+# Variable FUS stimulation strength
 
-stim_strengths = [1, 10, 100, 1000]
+# stim_strengths = [1, 10, 100]
 
-for i, stim_strength_i in enumerate(stim_strengths):
-    # Stim strength
-    stim_strength = stim_strength_i
+# for i, stim_strength_i in enumerate(stim_strengths):
+#     # Stim strength
+#     stim_strength = stim_strength_i
 
-    # Parameter definitions (rate constants)
-    kcl = 0.25 # Rate of elimination (1/min)
-    kmetp = 0 # Rate of metabolism
-    kfcsf = 0.02 # Rate across the BBB (plasma to CSF)
-    krcsf = 0.002 # Rate across the BBB (CSF to plasma)
-    kmetcsf = 0.1 # Rate of metabolism in CSF (1/min)
-    kfsn = 0.1 # Rate of transfer from CSF to substantia nigra
-    krsn = 0.05 # Rate of transfer from substantia nigra to CSF
+#     # Parameter definitions (rate constants)
+#     kcl = 0.1 # Rate of elimination (1/min)
+#     kmetp = 0 # Rate of metabolism
+#     kfcsf = 0.02 # Rate across the BBB (plasma to CSF)
+#     krcsf = 0.002 # Rate across the BBB (CSF to plasma)
+#     kmetcsf = 0.1 # Rate of metabolism in CSF (1/min)
+#     kfsn = 0.1 # Rate of transfer from CSF to substantia nigra
+#     krsn = 0.05 # Rate of transfer from substantia nigra to CSF
 
-    # Initial conditions
-    Cp0 = 100 # Initial concentration in plasma ug/mL
-    Ccsf0 = 0.0 # Initial concentration in CSF
-    Csn0 = 0.0 # Initial concentration in substantia nigra
+#     # Initial conditions
+#     Cp0 = 100 # Initial concentration in plasma ug/mL
+#     Ccsf0 = 0.0 # Initial concentration in CSF
+#     Csn0 = 0.0 # Initial concentration in substantia nigra
 
-    sol_0 = simulate_model([Cp0, Ccsf0, Csn0], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=0.1)
+#     sol_0 = simulate_model([Cp0, Ccsf0, Csn0], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=0.1)
 
-    Cp0_0 = sol_0.y[0, -1]
-    Ccsf0_0 = sol_0.y[1, -1]
-    Csn0_0 = sol_0.y[2, -1]
-    kfcsf_stim = kfcsf * stim_strength # Rate across the BBB (plasma to CSF)
-    krcsf_stim = krcsf * stim_strength # Rate across the BBB (CSF to plasma)
+#     Cp0_0 = sol_0.y[0, -1]
+#     Ccsf0_0 = sol_0.y[1, -1]
+#     Csn0_0 = sol_0.y[2, -1]
+#     kfcsf_stim = kfcsf * stim_strength # Rate across the BBB (plasma to CSF)
+#     krcsf_stim = krcsf * stim_strength # Rate across the BBB (CSF to plasma)
 
-    sol_1 = simulate_model([Cp0_0, Ccsf0_0, Csn0_0], [kcl, kmetp, kfcsf_stim, krcsf_stim, kmetcsf, kfsn, krsn], time_end=0.25)
+#     sol_1 = simulate_model([Cp0_0, Ccsf0_0, Csn0_0], [kcl, kmetp, kfcsf_stim, krcsf_stim, kmetcsf, kfsn, krsn], time_end=0.25)
 
-    Cp0_1 = sol_1.y[0, -1]
-    Ccsf0_1 = sol_1.y[1, -1]
-    Csn0_1 = sol_1.y[2, -1]
-    kfcsf = 0.02
-    krcsf = 0.002
+#     Cp0_1 = sol_1.y[0, -1]
+#     Ccsf0_1 = sol_1.y[1, -1]
+#     Csn0_1 = sol_1.y[2, -1]
+#     kfcsf = 0.02
+#     krcsf = 0.002
 
-    sol_2 = simulate_model([Cp0_1, Ccsf0_1, Csn0_1], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=150)
+#     sol_2 = simulate_model([Cp0_1, Ccsf0_1, Csn0_1], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=150)
 
-    t_0 = sol_0.t
-    t_1 = sol_1.t + 0.1
-    t_2 = sol_2.t + 0.25 + 0.1
-    t = np.concatenate([t_0, t_1, t_2])
-    y = np.concatenate([sol_0.y, sol_1.y, sol_2.y], axis=1)
+#     t_0 = sol_0.t
+#     t_1 = sol_1.t + 0.1
+#     t_2 = sol_2.t + 0.25 + 0.1
+#     t = np.concatenate([t_0, t_1, t_2])
+#     y = np.concatenate([sol_0.y, sol_1.y, sol_2.y], axis=1)
 
-    plt.subplot(len(stim_strengths), 2, 2*(i)+1)
-    plt.plot(t, y[0], label='Cp (Plasma)')
-    plt.plot(t, y[1], label='Ccsf (CSF)')
-    plt.plot(t, y[2], label='Csn (Substantia Nigra)')
-    plt.xlabel('Time (min)')
-    plt.ylabel('Concentration (ug/L)')
-    # plt.ylim(0,2)
-    plt.xlim(0,5)
-    plt.grid()
+#     plt.subplot(len(stim_strengths), 2, 2*(i)+1)
+#     plt.plot(t, y[0], label='Cp (Plasma)')
+#     plt.plot(t, y[1], label='Ccsf (CSF)')
+#     plt.plot(t, y[2], label='Csn (Substantia Nigra)')
+#     plt.xlabel('Time (min)')
+#     plt.ylabel('Concentration (ug/L)')
+#     # plt.ylim(0,2)
+#     plt.xlim(0,5)
+#     plt.grid()
 
-    plt.subplot(len(stim_strengths), 2, 2*(i+1))
-    plt.plot(t, y[0], label='Cp (Plasma)')
-    plt.plot(t, y[1], label='Ccsf (CSF)')
-    plt.plot(t, y[2], label='Csn (Substantia Nigra)')
-    plt.xlabel('Time (min)')
-    plt.ylabel('Concentration (ug/L)')
-    # plt.ylim(0,15)
-    # plt.xlim(0,5)
-    plt.grid()
+#     plt.subplot(len(stim_strengths), 2, 2*(i+1))
+#     plt.plot(t, y[0], label='Cp (Plasma)')
+#     plt.plot(t, y[1], label='Ccsf (CSF)')
+#     plt.plot(t, y[2], label='Csn (Substantia Nigra)')
+#     plt.xlabel('Time (min)')
+#     plt.ylabel('Concentration (ug/L)')
+#     # plt.ylim(0,15)
+#     # plt.xlim(0,5)
+#     plt.grid()
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()
+
+
+# Variable clearance/metabolism rates
+
+# clearances = [10, 0.5, 0.005]
+# for i, clearances_i in enumerate(clearances):
+#     # Stim strength
+#     clearance = clearances_i
+
+#     # Parameter definitions (rate constants)
+#     kcl = clearance # Rate of elimination (1/min)
+#     kmetp = 0 # Rate of metabolism
+#     kfcsf = 0.02 # Rate across the BBB (plasma to CSF)
+#     krcsf = 0.002 # Rate across the BBB (CSF to plasma)
+#     kmetcsf = 0.1 # Rate of metabolism in CSF (1/min)
+#     kfsn = 0.1 # Rate of transfer from CSF to substantia nigra
+#     krsn = 0.05 # Rate of transfer from substantia nigra to CSF
+
+#     # Initial conditions
+#     Cp0 = 100 # Initial concentration in plasma ug/mL
+#     Ccsf0 = 0.0 # Initial concentration in CSF
+#     Csn0 = 0.0 # Initial concentration in substantia nigra
+
+#     sol_0 = simulate_model([Cp0, Ccsf0, Csn0], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=0.1)
+
+#     Cp0_0 = sol_0.y[0, -1]
+#     Ccsf0_0 = sol_0.y[1, -1]
+#     Csn0_0 = sol_0.y[2, -1]
+#     kfcsf_stim = kfcsf * 10 # Rate across the BBB (plasma to CSF)
+#     krcsf_stim = krcsf * 10 # Rate across the BBB (CSF to plasma)
+
+#     sol_1 = simulate_model([Cp0_0, Ccsf0_0, Csn0_0], [kcl, kmetp, kfcsf_stim, krcsf_stim, kmetcsf, kfsn, krsn], time_end=0.25)
+
+#     Cp0_1 = sol_1.y[0, -1]
+#     Ccsf0_1 = sol_1.y[1, -1]
+#     Csn0_1 = sol_1.y[2, -1]
+#     kfcsf = 0.02
+#     krcsf = 0.002
+
+#     sol_2 = simulate_model([Cp0_1, Ccsf0_1, Csn0_1], [kcl, kmetp, kfcsf, krcsf, kmetcsf, kfsn, krsn], time_end=150)
+
+#     t_0 = sol_0.t
+#     t_1 = sol_1.t + 0.1
+#     t_2 = sol_2.t + 0.25 + 0.1
+#     t = np.concatenate([t_0, t_1, t_2])
+#     y = np.concatenate([sol_0.y, sol_1.y, sol_2.y], axis=1)
+
+#     plt.subplot(len(clearances), 2, 2*(i)+1)
+#     plt.plot(t, y[0], label='Cp (Plasma)')
+#     plt.plot(t, y[1], label='Ccsf (CSF)')
+#     plt.plot(t, y[2], label='Csn (Substantia Nigra)')
+#     plt.xlabel('Time (min)')
+#     plt.ylabel('Concentration (ug/L)')
+#     # plt.ylim(0,2)
+#     plt.xlim(0,5)
+#     plt.grid()
+
+#     plt.subplot(len(clearances), 2, 2*(i+1))
+#     plt.plot(t, y[0], label='Cp (Plasma)')
+#     plt.plot(t, y[1], label='Ccsf (CSF)')
+#     plt.plot(t, y[2], label='Csn (Substantia Nigra)')
+#     plt.xlabel('Time (min)')
+#     plt.ylabel('Concentration (ug/L)')
+#     # plt.ylim(0,15)
+#     # plt.xlim(0,5)
+#     plt.grid()
+
+# plt.tight_layout()
+# plt.show()
